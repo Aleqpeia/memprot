@@ -1,0 +1,33 @@
+version: '3.8'
+
+services:
+  memprot-analysis:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - ./data:/home/mduser/data
+      - ./config:/home/mduser/config
+      - ./results:/home/mduser/results
+    environment:
+      - PYTHONPATH=/home/mduser/memprot-analysis/src
+    working_dir: /home/mduser
+    command: ["bash"]
+    stdin_open: true
+    tty: true
+    
+  jupyter:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8888:8888"
+    volumes:
+      - ./data:/home/mduser/data
+      - ./config:/home/mduser/config
+      - ./results:/home/mduser/results
+      - ./notebooks:/home/mduser/notebooks
+    environment:
+      - PYTHONPATH=/home/mduser/memprot-analysis/src
+    working_dir: /home/mduser
+    command: ["jupyter", "lab", "--ip=0.0.0.0", "--port=8888", "--no-browser", "--allow-root", "--NotebookApp.token=''"] 
